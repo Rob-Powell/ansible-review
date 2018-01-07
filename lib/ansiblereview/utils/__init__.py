@@ -155,11 +155,17 @@ def review(candidate, settings, lines=None):
                 if settings.output_type == "cc":
                     ccissue(standard.name, candidate.path, err, settings)
             elif LooseVersion(standard.version) > LooseVersion(candidate.version):
-                warn("Future standard \"%s\" not met:\n%s:%s" %
-                     (standard.name, candidate.path, err), settings)
+                if settings.output_type == "stdout":
+                    warn("Future standard \"%s\" not met:\n%s:%s" %
+                        (standard.name, candidate.path, err), settings)
+                if settings.output_type == "cc":
+                    ccissue(standard.name, candidate.path, err, settings)
             else:
-                error("Standard \"%s\" not met:\n%s:%s" %
-                      (standard.name, candidate.path, err))
+                if settings.output_type == "stdout":
+                    error("Standard \"%s\" not met:\n%s:%s" %
+                         (standard.name, candidate.path, err))
+                if settings.output_type == "cc":
+                    ccissue(standard.name, candidate.path, err, settings)
                 errors = errors + 1
         if not result.errors:
             if not standard.version:
