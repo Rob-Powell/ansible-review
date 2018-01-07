@@ -47,6 +47,8 @@ def main():
                       const=logging.ERROR, help="Only output errors")
     parser.add_option('-s', dest='standards_filter', action='append',
                       help="limit standards to specific names")
+    parser.add_option('-t', dest='output_type', action="store_const", default="stdout",
+                      const="cc", help="Change to Code Climate output type")
     parser.add_option('-v', dest='log_level', action="store_const", default=logging.WARN,
                       const=logging.INFO, help="Show more verbose output")
 

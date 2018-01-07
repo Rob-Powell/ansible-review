@@ -14,6 +14,7 @@ import logging
 import os
 import subprocess
 import sys
+import json
 
 try:
     import ConfigParser as configparser
@@ -34,6 +35,32 @@ def warn(message, settings, file=sys.stdout):
     if settings.log_level <= logging.WARNING:
         print(stringc("WARN: %s" % message, 'yellow'), file=file)
 
+def ccissue(standardName, filePath, message, settings, file=sys.stdout):
+    if settings.log_level <= logging.WARNING:
+        ccissue = {
+             'type': 'issue',
+             'check_name': message.ruleid,
+             'categories': ['Style'],
+             'description': standardName,
+             'remediation_points': 50000,
+             'location': {
+                 'path': os.path.normpath(filePath),
+                 'positions': {
+                     'begin': {
+                         'line': message.lineno,
+                         'column': 0
+                     },
+                     'end': {
+                         'line': message.lineno,
+                         'column': 0
+                     }
+                 }
+             },
+             'content': {
+                 'body': message.message
+             }
+        }
+        print(json.dumps(ccissue)+'\0')
 
 def info(message, settings, file=sys.stdout):
     if settings.log_level <= logging.INFO:
@@ -122,8 +149,11 @@ def review(candidate, settings, lines=None):
                     if not err.lineno or
                     is_line_in_ranges(err.lineno, lines_ranges(lines))]:
             if not standard.version:
-                warn("Best practice \"%s\" not met:\n%s:%s" %
-                     (standard.name, candidate.path, err), settings)
+                if settings.output_type == "stdout":
+                    warn("Best practice \"%s\" not met:\n%s:%s" %
+                        (standard.name, candidate.path, err), settings)
+                if settings.output_type == "cc":
+                    ccissue(standard.name, candidate.path, err, settings)
             elif LooseVersion(standard.version) > LooseVersion(candidate.version):
                 warn("Future standard \"%s\" not met:\n%s:%s" %
                      (standard.name, candidate.path, err), settings)

@@ -40,9 +40,10 @@ class Standard(object):
 
 
 class Error(object):
-    def __init__(self, lineno, message):
+    def __init__(self, ruleid, lineno, message):
         self.lineno = lineno
         self.message = message
+        self.ruleid = ruleid
 
     def __repr__(self):
         if self.lineno:
@@ -221,7 +222,7 @@ def ansiblelint(rulename, candidate, settings):
 
     fileinfo = dict(path=candidate.path, type=candidate.filetype)
     matches = rules.run(fileinfo, rulename.split(','))
-    result.errors = [Error(match.linenumber, "[%s] %s" % (match.rule.id, match.message))
+    result.errors = [Error(match.rule.id, match.linenumber, "[%s] %s" % (match.rule.id, match.message))
                      for match in matches]
     return result
 
