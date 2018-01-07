@@ -273,7 +273,7 @@ dont_compare_to_empty_string = Standard(dict(
 latest_version = Standard(dict(
     check=noop,
     name="No-op check to ensure latest standards version is set",
-    version="0.1",
+    version="0.2",
     types=[]
 ))
 
