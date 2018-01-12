@@ -40,7 +40,7 @@ class Standard(object):
 
 
 class Error(object):
-    def __init__(self, ruleid, lineno, message):
+    def __init__(self, lineno, message, ruleid="[CUSTOM]"):
         self.lineno = lineno
         self.message = message
         self.ruleid = ruleid
@@ -202,6 +202,8 @@ def classify(filename):
         return Template(filename)
     if 'files' in filename.split(os.sep):
         return File(filename)
+    if 'vault' in filename.lower()
+        return None
     if filename.endswith('.yml') or filename.endswith('.yaml'):
         return Playbook(filename)
     if 'README' in filename:
@@ -222,7 +224,7 @@ def ansiblelint(rulename, candidate, settings):
 
     fileinfo = dict(path=candidate.path, type=candidate.filetype)
     matches = rules.run(fileinfo, rulename.split(','))
-    result.errors = [Error(match.rule.id, match.linenumber, "[%s] %s" % (match.rule.id, match.message))
+    result.errors = [Error(match.linenumber, "[%s] %s" % (match.rule.id, match.message), match.rule.id)
                      for match in matches]
     return result
 
