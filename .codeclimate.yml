@@ -7,3 +7,4 @@ engines:
       work_dir: /var/tmp/ansiblereview-rules
       standards_dir: standards
       lint_dir: lint-rules
+      search_method: git
