@@ -33,7 +33,17 @@ def error(message, file=sys.stderr):
 
 def warn(message, settings, file=sys.stdout):
     if settings.log_level <= logging.WARNING:
-        print(stringc("WARN: %s" % message, 'yellow'), file=file)
+        if settings.output_type == "cc":
+            ccwarn = {
+                "name": "WARN: " + message,
+                "type": "Warning",
+                "value": 8,
+                "engine_name": "ansiblereview"
+            }
+            print(json.dumps(ccwarn)+'\0')
+        else:
+            print(stringc("WARN: %s" % message, 'yellow'), file=file)
+
 
 def ccissue(standardName, filePath, message, settings, file=sys.stdout):
     if settings.log_level <= logging.WARNING:
@@ -62,9 +72,19 @@ def ccissue(standardName, filePath, message, settings, file=sys.stdout):
         }
         print(json.dumps(ccissue)+'\0')
 
+
 def info(message, settings, file=sys.stdout):
     if settings.log_level <= logging.INFO:
-        print(stringc("INFO: %s" % message, 'green'), file=file)
+        if settings.output_type == "cc":
+            ccinfo = {
+                "name": "INFO: " + message,
+                "type": "INFO",
+                "value": 8,
+                "engine_name": "ansiblereview"
+            }
+            print(json.dumps(ccinfo)+'\0')
+        else:
+            print(stringc("INFO: %s" % message, 'green'), file=file)
 
 
 def standards_latest(standards):
