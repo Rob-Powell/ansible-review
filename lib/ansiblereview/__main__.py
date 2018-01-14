@@ -7,6 +7,7 @@ import os
 import sys
 import io
 import glob
+import ssl
 from urllib import urlopen
 from zipfile import ZipFile
 from ansiblereview.version import __version__
@@ -70,7 +71,8 @@ def main():
 
     if options.ruleszip and options.workdir:
         zipurl = options.ruleszip
-        zipresp = urlopen(zipurl)
+        tlscontext = ssl._create_unverified_context()
+        zipresp = urlopen(zipurl, context=tlscontext)
         zfile =  ZipFile(io.BytesIO(zipresp.read()))
         zfile.extractall(options.workdir)
 
