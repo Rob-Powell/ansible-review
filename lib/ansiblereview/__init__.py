@@ -202,7 +202,7 @@ def classify(filename):
         return Template(filename)
     if 'files' in filename.split(os.sep):
         return File(filename)
-    if 'vault' in filename.lower()
+    if 'vault' in filename.lower():
         return None
     if filename.endswith('.yml') or filename.endswith('.yaml'):
         return Playbook(filename)
