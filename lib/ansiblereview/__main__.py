@@ -85,7 +85,7 @@ def main():
             info("Using standards rules from: %s" % rulesdirtmp[0], options)
             options.rulesdir = rulesdirtmp[0]
         else:
-            rulesdirtmp = options.workdir + options.rulesdir
+            rulesdirtmp = os.path.join(options.workdir, options.rulesdir)
             info("Using standards rules from: %s" % rulesdirtmp, options)
             options.rulesdir = rulesdirtmp
 
@@ -94,7 +94,7 @@ def main():
             info("Using lint rules from: %s" % lintdirtmp[0], options)
             options.lintdir = lintdirtmp[0]
         else:
-            lintdirtmp = options.workdir + options.lintdir
+            lintdirtmp = os.path.join(options.workdir, options.lintdir)
             info("Using lint rules from: %s" % lintdirtmp, options)
             options.lintdir = lintdirtmp
 
