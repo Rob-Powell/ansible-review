@@ -61,7 +61,6 @@ def ccissue(standardName, filePath, message, settings, file=sys.stdout):
                      'begin': message.lineno,
                      'end': message.lineno
                      }
-                 }
              },
              'content': {
                  'body': message.message
