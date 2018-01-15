@@ -58,13 +58,8 @@ def ccissue(standardName, filePath, message, settings, file=sys.stdout):
              'location': {
                  'path': os.path.normpath(filePath),
                  'lines': {
-                     'begin': {
-                         'line': message.lineno,
-                         'column': 0
-                     },
-                     'end': {
-                         'line': message.lineno,
-                         'column': 0
+                     'begin': message.lineno,
+                     'end': message.lineno
                      }
                  }
              },
