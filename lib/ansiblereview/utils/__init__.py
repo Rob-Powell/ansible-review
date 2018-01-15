@@ -40,13 +40,15 @@ def warn(message, settings, file=sys.stdout):
                 "value": 8,
                 "engine_name": "ansiblereview"
             }
-            print(json.dumps(ccwarn)+'\0')
+            #print(json.dumps(ccwarn)+'\0')
         else:
             print(stringc("WARN: %s" % message, 'yellow'), file=file)
 
 
 def ccissue(standardName, filePath, message, settings, file=sys.stdout):
     if settings.log_level <= logging.WARNING:
+        if message.lineno == None:
+            message.lineno = 0
         ccissue = {
              'type': 'issue',
              'check_name': message.ruleid,
@@ -55,7 +57,7 @@ def ccissue(standardName, filePath, message, settings, file=sys.stdout):
              'remediation_points': 50000,
              'location': {
                  'path': os.path.normpath(filePath),
-                 'positions': {
+                 'lines': {
                      'begin': {
                          'line': message.lineno,
                          'column': 0

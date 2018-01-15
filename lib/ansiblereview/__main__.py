@@ -8,7 +8,7 @@ import sys
 import io
 import glob
 import ssl
-from urllib import urlopen
+from urllib2 import urlopen
 from zipfile import ZipFile
 from ansiblereview.version import __version__
 from ansiblereview import classify
@@ -72,19 +72,31 @@ def main():
     if options.ruleszip and options.workdir:
         zipurl = options.ruleszip
         tlscontext = ssl._create_unverified_context()
-        zipresp = urlopen(zipurl, context=tlscontext)
-        zfile =  ZipFile(io.BytesIO(zipresp.read()))
+        if zipurl.startswith('http'):
+            zipresp = urlopen(zipurl, context=tlscontext)
+        else:
+            zipresp = open(zipurl, 'r')
+        zfile = ZipFile(io.BytesIO(zipresp.read()))
         zfile.extractall(options.workdir)
 
-        if options.rulesdir:
+    if options.workdir:
+        if options.rulesdir and options.ruleszip:
             rulesdirtmp = glob.glob(options.workdir + "/*/" + options.rulesdir)
-            info("Using standards rules from: %s" % rulesdirtmp, options)
+            info("Using standards rules from: %s" % rulesdirtmp[0], options)
             options.rulesdir = rulesdirtmp[0]
+        else:
+            rulesdirtmp = options.workdir + options.rulesdir
+            info("Using standards rules from: %s" % rulesdirtmp, options)
+            options.rulesdir = rulesdirtmp
 
-        if options.lintdir:
+        if options.lintdir and options.ruleszip:
             lintdirtmp = glob.glob(options.workdir + "/*/" + options.lintdir)
             info("Using lint rules from: %s" % lintdirtmp[0], options)
             options.lintdir = lintdirtmp[0]
+        else:
+            lintdirtmp = options.workdir + options.lintdir
+            info("Using lint rules from: %s" % lintdirtmp, options)
+            options.lintdir = lintdirtmp
 
     if os.path.exists(options.configfile):
         info("Using configuration file: %s" % options.configfile, options)
