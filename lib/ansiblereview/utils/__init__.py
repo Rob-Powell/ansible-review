@@ -47,8 +47,13 @@ def warn(message, settings, file=sys.stdout):
 
 def ccissue(standardName, filePath, message, settings, file=sys.stdout):
     if settings.log_level <= logging.WARNING:
-        if message.lineno == None:
+
+        if message.lineno is None:
             message.lineno = 0
+
+        if standardName == "Python code should pass flake8":
+            standardName = message.message
+
         ccissue = {
              'type': 'issue',
              'check_name': message.ruleid,
